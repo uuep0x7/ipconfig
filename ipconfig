@@ -1,0 +1,63 @@
+#! /bin/bash
+# Configuração de ip
+# by uuep
+#####################
+
+clear
+echo " ===================="
+echo " ===== IpConfig ====="
+echo " ===================="
+echo -e "\n"
+### Configuração IPV4 ###
+
+echo -e " ┌─ Informe a interface de rede \n ex:  wlan0, eth0	" && read inter
+echo -e "\n"
+
+ifconfig $inter down && notify-send "A interface $inter foi desativada"
+sleep 3
+
+echo -e " ┌─ Endereço IP ($inter)	" && read ip
+echo -e "\n"
+
+echo -e " ┌─ Netmask (255.255.255.0)" && read net
+
+ifconfig $inter $ip netmask $net
+
+echo -e "\n"
+
+echo -e " ┌─ Gateway Padrão		" && read gwp
+
+route add default gw $gwp
+
+sleep 3 
+ifconfig $inter up
+clear
+
+notify-send "A interface $inter foi Ativada" 
+notify-send "IP: $ip" 
+notify-send "Netmask: $net" 
+notify-send "Gateway: $gwp"
+
+echo " =========================="
+echo " ==== [Testar Conexão] ===="
+echo " =========================="
+echo -e "\n"
+
+echo -e " [+] Interface ────╼	$inter" 
+echo -e " [+] Endereço IP ──╼	$ip" 
+echo -e " [+] Netmask ──────╼	$net" 
+echo -e " [+] Gateway ──────╼	$gwp"
+echo -e "\n"
+echo -e " ┌─ Testando conexão em debian.org"
+ping -c 4 debian.org
+echo -e "\n"
+
+#echo -e " ┌─ Servidor DNS 1		" && read dns1
+#echo "nameserver $dns1" >> /root/tools/ip/ip
+#echo -e "\n"
+
+#echo -e " ┌─ Servidor DNS 2		" && read dns2
+#echo "nameserver $dns2" >> /root/tools/ip/ip
+#echo -e "\n"
+
+
